@@ -1,6 +1,6 @@
 # flask-user-authentication
 
-This open source project is a Flask web application focused on user management, utilizing MongoDB for data storage. It's designed to be a collaborative project, and we welcome contributions from the community.
+This open-source project is a Flask web application focused on user management, utilizing MongoDB for data storage. It's designed to be a collaborative project, and we welcome contributions from the community.
 
 ## Features
 
@@ -50,7 +50,7 @@ We welcome contributions of all forms. Here are some ways you can contribute:
 - **Submitting Patches and Enhancements**: Fork the repository and submit pull requests with your changes.
 - **Reporting Issues**: Use the GitHub Issues section to report bugs and suggest enhancements.
 - **Documentation**: Help improve or translate the documentation.
-- **Community Support**: Help others in the community understand and use the project.
+- **Community Support**: Help others understand and use the project.
 ### Guidelines
 - Ensure your code adheres to the project's coding standards.
 - Write tests for new functionalities.

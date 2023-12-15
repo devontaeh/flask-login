@@ -114,23 +114,6 @@ def home():
     return render_template('home.html')
 
 
-'''
-TESTING INSERT METHOD
-
-@app.route('/test_insert')
-def test_insert():
-    test_user = {
-        'first_name': 'Test',
-        'last_name': 'User',
-        'email': 'test@example.com',
-        'username': 'testuser',
-        'password': 'hashedpassword'
-    }
-    users.insert_one(test_user)
-    return "Test user inserted"
-
-'''
-
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -172,7 +155,6 @@ def register():
     form = RegisterForm()
     
     if form.validate_on_submit():
-        print("Form validated and submitted successfully.")
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(
             first_name=form.first_name.data,
@@ -181,24 +163,14 @@ def register():
             username=form.username.data,
             password=hashed_password
             )
-            
-        print("New user created:", new_user.first_name, new_user.username)  # Debugging
-
         new_user.save()
-        print("Save method called for:", new_user.username)  # Confirm save method is called
-
         return redirect(url_for('login'))
-    
-    
     else:
-        # Debug prints: If this part is reached, the form did not validate
-        print("Form not validated or not submitted.")
         if form.errors:
             print("Form errors:")
             for field, errors in form.errors.items():
                 for error in errors:
                     print(f"Error in the {field} field - {error}")
-  
     return render_template('register.html', form = form)
     
 

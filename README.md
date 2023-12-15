@@ -1,4 +1,4 @@
-# user-management-app
+# flask-user-authentication
 
 This open source project is a Flask web application focused on user management, utilizing MongoDB for data storage. It's designed to be a collaborative project, and we welcome contributions from the community.
 

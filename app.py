@@ -52,14 +52,15 @@ def load_user(user_id):
             first_name=user_data['first_name'],
             last_name=user_data['last_name'],
             email=user_data['email'],
-            usernmae=user_data['username'],
+            username=user_data['username'],
             password=user_data['password'],
             _id=user_data['_id']
         )
     return None
 
 class User:
-    def __init__(self, first_name, last_name, email,username, password):
+    def __init__(self,  first_name, last_name, email,username, password, _id=None):
+        self._id = _id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -83,6 +84,24 @@ class User:
     @staticmethod
     def validate_login(password_hash, password):
         return bcrypt.check_password_hash(password_hash, password)
+    @property
+    def is_authenticated(self):
+        # This should return True if the user is authenticated, i.e., they have provided valid credentials
+        return True
+
+    @property
+    def is_active(self):
+        # This should return True if this is an active user - you might want to add logic here to check if a user is active
+        return True
+
+    @property
+    def is_anonymous(self):
+        # This should return True if this is an anonymous user
+        return False
+
+    def get_id(self):
+        # Assuming you're using MongoDB's ObjectId, you need to convert it to string
+        return str(self._id)
 
     
 class RegisterForm(FlaskForm):

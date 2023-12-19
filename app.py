@@ -86,21 +86,22 @@ class User:
         return bcrypt.check_password_hash(password_hash, password)
     @property
     def is_authenticated(self):
-        # This should return True if the user is authenticated, i.e., they have provided valid credentials
+        # return True if the user is authenticated, i.e., they have provided valid credentials
         return True
 
     @property
     def is_active(self):
-        # This should return True if this is an active user - you might want to add logic here to check if a user is active
+        # return True if this is an active user 
+        # can add logi ie acc confirmation/suspension/subscription
         return True
 
     @property
     def is_anonymous(self):
-        # This should return True if this is an anonymous user
+        # return True if this is an anonymous user
         return False
 
     def get_id(self):
-        # Assuming you're using MongoDB's ObjectId, you need to convert it to string
+        # convert ObjectID to a string
         return str(self._id)
 
     

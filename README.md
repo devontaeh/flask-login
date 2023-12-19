@@ -29,29 +29,33 @@ This open source project is a Flask web application focused on user management, 
 
 1. **Clone the Repository**:
    ```bash
-   git clone [repository-url]
+   git clone 
+   ```
 2. **Install Dependencies**:
    ```bash
    pip install Flask Flask-WTF Flask-Login Flask-Bcrypt pymongo certifi
    ```
 3. **Setup MongoDB**:
+
 - Ensure MongoDB is running
 - Update the connection URI in the application configuration
 
 4. **Run the Application**:
-    ```
-    python app.py
-    ```
-
+   ```
+   python app.py
+   ```
 
 ## Contributing
+
 We welcome contributions of all forms. Here are some ways you can contribute:
 
 - **Submitting Patches and Enhancements**: Fork the repository and submit pull requests with your changes.
 - **Reporting Issues**: Use the GitHub Issues section to report bugs and suggest enhancements.
 - **Documentation**: Help improve or translate the documentation.
 - **Community Support**: Help others in the community understand and use the project.
+
 ### Guidelines
+
 - Ensure your code adheres to the project's coding standards.
 - Write tests for new functionalities.
 - Update the documentation as needed.

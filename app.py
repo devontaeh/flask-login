@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user
 from flask_wtf import FlaskForm
@@ -9,18 +10,23 @@ from pymongo.mongo_client import MongoClient
 import certifi
 from bson import ObjectId
 
+# hiding keys
+load_dotenv()
+secret_key = os.getenv('SECRET_KEY')
+mongo_uri = os.getenv('MONGO_URI')
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 # secret key needed for csf -> Forms from flask_wtf
-app.config['SECRET_KEY'] = '09dda5ad1019a5899786de3cfd29f0ab'
+app.config['SECRET_KEY'] = secret_key
 
 # used to hash passwords
 bcrypt = Bcrypt(app)
 
 # connect to MongoDb
-password = 'x1pd32hRYY1LH0eu'
-uri = f'mongodb+srv://dhudso3:{password}@loginapp.tjrlnvl.mongodb.net/?retryWrites=true&w=majority'
+
+uri = mongo_uri
 
 client = MongoClient(uri, tlsCAFile=certifi.where())
 db = client['loginApp']

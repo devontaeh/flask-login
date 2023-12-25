@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, url_for, jsonify
-from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user
+from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Email
@@ -79,7 +79,8 @@ class User:
         }
         users.insert_one(user_data)
      
-
+    # Flask-Login required methods and properties
+    
     # Static method for password validation
     @staticmethod
     def validate_login(password_hash, password):
@@ -135,11 +136,12 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+# Home page
 @app.route('/')
 def home():
     return render_template('home.html')
 
-
+# Login page
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -162,12 +164,14 @@ def login():
             pass
     return render_template('login.html', form = form)
 
-
+# User dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required 
 def dashboard():
+    
     return render_template('dashboard.html')
 
+# Logout -> redirects to login page
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -175,7 +179,7 @@ def logout():
     return redirect(url_for('login'))
     
 
-
+# Registration page
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     form = RegisterForm()

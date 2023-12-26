@@ -10,40 +10,39 @@ from pymongo.mongo_client import MongoClient
 import certifi
 from bson import ObjectId
 
-# hiding keys
+# Load environment variales for secret keys and database URI
 load_dotenv()
 secret_key = os.getenv('SECRET_KEY')
 mongo_uri = os.getenv('MONGO_URI')
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-app = Flask(__name__)
-# secret key needed for csf -> Forms from flask_wtf
-app.config['SECRET_KEY'] = secret_key
+# basedir = os.path.abspath(os.path.dirname(__file__))
 
-# used to hash passwords
+# Initialize Flask application
+app = Flask(__name__)
+app.config['SECRET_KEY'] = secret_key # set secret key for CSRF protection
+
+# Initialize Bcrypt for password hashing
 bcrypt = Bcrypt(app)
 
-# connect to MongoDb
-
-uri = mongo_uri
-
-client = MongoClient(uri, tlsCAFile=certifi.where())
+# set up MongoDB connection
+client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
 db = client['loginApp']
 users = db.users
 
-# check if succesful connection
+# Attempt to ping MongoDB to check for successful connection
 try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfuclly connected to MongoDB!")
 except Exception as e:
     print(e)
 
-
+# Initialize Flask-Login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# User loader callback for Flask-Login to load user from session
 @login_manager.user_loader
 def load_user(user_id):
     user_data = users.find_one({'_id':ObjectId(user_id)})
@@ -58,6 +57,7 @@ def load_user(user_id):
         )
     return None
 
+# User model for Flask-Login 
 class User:
     def __init__(self,  first_name, last_name, email,username, password, _id=None):
         self._id = _id
@@ -67,7 +67,7 @@ class User:
         self.username = username
         self.password = password
   
-
+    # Save user to MongoDB
     def save(self):
         user_data = {
             'first_name': self.first_name,
@@ -79,9 +79,7 @@ class User:
         }
         users.insert_one(user_data)
      
-    # Flask-Login required methods and properties
-    
-    # Static method for password validation
+    # Required methods for Flask-Login user model
     @staticmethod
     def validate_login(password_hash, password):
         return bcrypt.check_password_hash(password_hash, password)
@@ -105,7 +103,7 @@ class User:
         # convert ObjectID to a string
         return str(self._id)
 
-    
+# Registration form with WTForms validators
 class RegisterForm(FlaskForm):
     first_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "First Name"})
     last_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "Last Name"})
@@ -119,8 +117,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
     
-    # validate_<fieldname>, Flask_WTForms auto treats this pattern as a customer validtors
-    
+    # Custom validators to ensure unqiue usernames and emails
     def validate_username(self, username):
         existing_user_username = users.find_one(
             {'username':username.data})
@@ -135,7 +132,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError(
                 'This email is already in use. Please choose a different one.')
 
-
+# LoginForm with validators for user login
 class LoginForm(FlaskForm):
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -148,7 +145,8 @@ class LoginForm(FlaskForm):
    
 
 
-# Home page
+# Routes for Flask application
+# Home
 @app.route('/')
 def home():
     return render_template('home.html')

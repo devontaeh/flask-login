@@ -8,8 +8,11 @@
   <body>
     <h1>Registration Page</h1>
     <form method="POST" action="">
+      <!-- CSRF token hidden field for form security -->
       {{form.hidden_tag()}}
+      <!-- Display the first error for email if it exists -->
       <div>{% if form.email.errors %} {{form.email.errors[0]}} {% endif %}</div>
+      <!-- Display the first error for username if it exists -->
       <div>
         {% if form.username.errors %} {{form.username.errors[0]}} {% endif %}
       </div>
@@ -20,6 +23,7 @@
       <div>{{form.password}}</div>
       <div>{{form.submit}}</div>
     </form>
+    <!-- Link to the login page for users who already have an account -->
     <a href="{{url_for('login')}}">Already have an account? Login</a>
   </body>
 </html>

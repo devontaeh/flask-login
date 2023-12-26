@@ -6,20 +6,26 @@
     <title>Login</title>
   </head>
   <body>
+    <!-- Page title -->
     <h1>Login Page</h1>
     <form method="POST" action="">
+      <!-- Flask message section. This will display error messages from server -->
       {% with messages = get_flashed_messages(category_filter=["error"]) %} 
       {% if messages %}
       <div class="error">
+        <!-- Loop through error messages and display -->
         {% for message in messages %}
         <p>{{ message }}</p>
         {% endfor %}
       </div>
-      {% endif %} {% endwith %} {{form.hidden_tag()}}
+      {% endif %} {% endwith %} 
+      <!-- CSRF toekn hidden field for form security -->
+      {{form.hidden_tag()}}
       <div>{{form.username}}</div>
       <div>{{form.password}}</div>
       <div>{{form.submit}}</div>
     </form>
+    <!-- Link to registration page for existing users -->
     <a href="{{url_for('register')}}">Don't have an account? Register</a>
   </body>
 </html>

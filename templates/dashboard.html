@@ -6,7 +6,9 @@
     <title>Dashbord</title>
   </head>
   <body>
+    <!-- The 'current_user.username' is a placeholder that Flask and Flask-Login will replace with the actual username of current user -->
     <h1>Hello {{current_user.username}}. You are logged in!</h1>
+    <!-- Direct the user to the logout route  -->
     <a href="{{url_for('logout')}}">Logout</a>
   </body>
 </html>

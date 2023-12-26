@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, url_for, jsonify
+from flask import Flask, flash, redirect, render_template, url_for, jsonify
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -135,6 +135,9 @@ class LoginForm(FlaskForm):
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
     submit = SubmitField('Login')
+    
+   
+
 
 # Home page
 @app.route('/')
@@ -144,10 +147,13 @@ def home():
 # Login page
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    
     form = LoginForm()
     if form.validate_on_submit():
+        
         user_data =   users.find_one({'username':form.username.data})
         if user_data and bcrypt.check_password_hash(user_data['password'], form.password.data):
+            
             user_obj = User(
                 first_name=user_data['first_name'],
                 last_name=user_data['last_name'],
@@ -159,9 +165,8 @@ def login():
             login_user(user_obj)
             return redirect(url_for('dashboard'))
         else:
-            # this is where login failure will be handdled
-            #raiseValidationError
-            pass
+        
+            flash('Invalid username or password', 'error')
     return render_template('login.html', form = form)
 
 # User dashboard

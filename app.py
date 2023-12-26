@@ -118,13 +118,22 @@ class RegisterForm(FlaskForm):
 
     submit = SubmitField('Register')
 
-
+    
+    # validate_<fieldname>, Flask_WTForms auto treats this pattern as a customer validtors
+    
     def validate_username(self, username):
         existing_user_username = users.find_one(
             {'username':username.data})
         if existing_user_username:
             raise ValidationError(
-                'That username already exists. Please choose a different one.')
+                'This username already exists. Please choose a different one.')
+            
+    def validate_email(self, email):
+        existing_user_email = users.find_one(
+            {'email':email.data})
+        if existing_user_email:
+            raise ValidationError(
+                'This email is already in use. Please choose a different one.')
 
 
 class LoginForm(FlaskForm):

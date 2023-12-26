@@ -9,6 +9,10 @@
     <h1>Registration Page</h1>
     <form method="POST" action="">
       {{form.hidden_tag()}}
+      <div>{% if form.email.errors %} {{form.email.errors[0]}} {% endif %}</div>
+      <div>
+        {% if form.username.errors %} {{form.username.errors[0]}} {% endif %}
+      </div>
       <div>{{form.first_name}}</div>
       <div>{{form.last_name}}</div>
       <div>{{form.email}}</div>

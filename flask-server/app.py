@@ -143,13 +143,19 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
     
    
-
-
 # Routes for Flask application
 # Home
 @app.route('/')
 def home():
     return render_template('home.html')
+
+# Test route for react
+@app.route('/home_data')
+def home_data():
+    data = {"messages": ["hello1","hi","whats up"]}
+    return jsonify(data)
+    
+
 
 # Login page
 @app.route('/login', methods = ['GET', 'POST'])
@@ -219,5 +225,6 @@ def register():
 if __name__ == '__main__':
     # for deployment
     # to make it work for both production and development
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=True)

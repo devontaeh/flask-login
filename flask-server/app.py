@@ -144,10 +144,7 @@ class LoginForm(FlaskForm):
     
    
 # Routes for Flask application
-# Home
-@app.route('/')
-def home():
-    return render_template('home.html')
+
 
 # Test route for react
 @app.route('/home_data')
@@ -157,8 +154,8 @@ def home_data():
     
 
 
-# Login page
-@app.route('/login', methods = ['GET', 'POST'])
+# Login/home page
+@app.route('/', methods = ['GET', 'POST'])
 def login():
     
     form = LoginForm()

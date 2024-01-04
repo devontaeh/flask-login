@@ -42,7 +42,7 @@ export default function SignIn({ csrfToken }) {
     const username = data.get("username");
     const password = data.get("password");
     fetch("/", {
-      // Adjust to your login route
+      
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,13 +52,13 @@ export default function SignIn({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log('Parsed data:', data)
+        
         if (data.success) {
           console.log(data.message);
-          // Redirect to the dashboard or perform other actions for successful login
+          // Redirect to the dashboard
         } else {
           console.log(data.message);
-          // Show error message or perform other actions for failed login
+          // perform actions for failed login
         }
       })
       .catch((error) => {

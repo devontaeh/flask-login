@@ -220,7 +220,7 @@ def signup():
             password=hashed_password
             )
         new_user.save()
-        return jsonify({'success': True, 'message': 'Login successful'}), 200
+        return jsonify({'success': True, 'message': 'Signup successful'}), 200
     
 
     # If it's a GET request or form not validated

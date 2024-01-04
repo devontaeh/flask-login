@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, render_template, url_for, jsonify
+from flask import Flask, flash, redirect, render_template, request, url_for, jsonify
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect, generate_csrf
@@ -62,10 +62,10 @@ def load_user(user_id):
 
 # User model for Flask-Login 
 class User:
-    def __init__(self,  first_name, last_name, email,username, password, _id=None):
+    def __init__(self,  firstName, lastName, email,username, password, _id=None):
         self._id = _id
-        self.first_name = first_name
-        self.last_name = last_name
+        self.firstName = firstName
+        self.lastName = lastName
         self.email = email
         self.username = username
         self.password = password
@@ -73,8 +73,8 @@ class User:
     # Save user to MongoDB
     def save(self):
         user_data = {
-            'first_name': self.first_name,
-            'last_name': self.last_name,
+            'first_name': self.firstName,
+            'last_name': self.lastName,
             'email': self.email,
             'username': self.username,
             'password': self.password
@@ -108,8 +108,8 @@ class User:
 
 # Registration form with WTForms validators
 class RegisterForm(FlaskForm):
-    first_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "First Name"})
-    last_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "Last Name"})
+    firstName = StringField(validators=[InputRequired()], render_kw={"placeholder": "First Name"})
+    lastName = StringField(validators=[InputRequired()], render_kw={"placeholder": "Last Name"})
     email = StringField(validators=[InputRequired(), Email()], render_kw={"placeholder": "Email"})
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -164,7 +164,7 @@ def get_csrf_token():
 # Login/home page
 @app.route('/', methods = ['GET', 'POST'])
 def login():
-    
+    print("recieved data:", request.json)
     form = LoginForm()
     if form.validate_on_submit():
         
@@ -181,7 +181,7 @@ def login():
             )
             login_user(user_obj)
             print('login success')
-            return jsonify({'success': True, 'message': 'Login successful'}), 200
+            return jsonify({'success': True, 'message': 'Signup successful'}), 200
         else:
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
 
@@ -204,29 +204,27 @@ def logout():
     
 
 # Registration page
-@app.route('/register', methods = ['GET', 'POST'])
-def register():
+@app.route('/signup', methods = ['GET', 'POST'])
+def signup():
+    print("Recieved data: ", request.json)
     form = RegisterForm()
+    print('form valid: ', form.validate_on_submit())
     
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
+            firstName=form.firstName.data,
+            lastName=form.lastName.data,
             email=form.email.data,
             username=form.username.data,
             password=hashed_password
             )
         new_user.save()
-        return redirect(url_for('login'))
-    else:
-        if form.errors:
-            print("Form errors:")
-            for field, errors in form.errors.items():
-                for error in errors:
-                    print(f"Error in the {field} field - {error}")
-    return render_template('register.html', form = form)
+        return jsonify({'success': True, 'message': 'Login successful'}), 200
     
+
+    # If it's a GET request or form not validated
+    return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
 if __name__ == '__main__':
     # for deployment

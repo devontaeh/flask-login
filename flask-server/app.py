@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, flash, redirect, render_template, url_for, jsonify
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Email
 from flask_bcrypt import Bcrypt
@@ -21,6 +22,8 @@ mongo_uri = os.getenv('MONGO_URI')
 # Initialize Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key # set secret key for CSRF protection
+
+csrf =CSRFProtect(app)
 
 # Initialize Bcrypt for password hashing
 bcrypt = Bcrypt(app)
@@ -152,7 +155,11 @@ def home_data():
     data = {"messages": ["hello1","hi","whats up"]}
     return jsonify(data)
     
-
+@app.route('/get-csrf-token', methods=['GET'])
+def get_csrf_token():
+    token = generate_csrf()
+    
+    return jsonify({'csrfToken': token})
 
 # Login/home page
 @app.route('/', methods = ['GET', 'POST'])
@@ -173,6 +180,7 @@ def login():
                 _id=user_data['_id']
             )
             login_user(user_obj)
+            print('login success')
             return redirect(url_for('dashboard'))
         else:
         

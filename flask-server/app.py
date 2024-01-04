@@ -181,11 +181,12 @@ def login():
             )
             login_user(user_obj)
             print('login success')
-            return redirect(url_for('dashboard'))
+            return jsonify({'success': True, 'message': 'Login successful'}), 200
         else:
-        
-            flash('Invalid username or password', 'error')
-    return render_template('login.html', form = form)
+            return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
+
+    # If it's a GET request or form not validated
+    return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
 # User dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])

@@ -1,24 +1,28 @@
-import React, {useState, useEffect} from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import SignIn from "./components/signin";
 import SignUp from "./components/signup";
 
 function App() {
-  const [csrfToken, setCsrfToken] = useState('')
+  const [csrfToken, setCsrfToken] = useState("");
   useEffect(() => {
-    fetch('/get-csrf-token')
-      .then(response => {
+    fetch("/get-csrf-token")
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
-        return response.text();  // First, get the response as text
+        return response.json(); //parse the the response
       })
-      .then(text => {
-        console.log("CSRF Token Response:", text);  // Log the text response
-        return JSON.parse(text);  // Then parse it as JSON
+      .then((data) => {
+        console.log(data);
+        setCsrfToken(data.csrfToken);
       })
-      .then(data => setCsrfToken(data.csrfToken))
-      .catch(error => console.log('Error fetching CSRF Token:', error));
+      .catch((error) => console.log("Error fetching CSRF Token:", error));
   }, []);
   return (
     <Router>

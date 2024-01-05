@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import SignIn from "./components/signin";
 import SignUp from "./components/signup";
+import Dashboard from "./components/dashboard";
 
 function App() {
   const [csrfToken, setCsrfToken] = useState("");
@@ -32,6 +33,8 @@ function App() {
 
         {/* Route for SignUp */}
         <Route path="/signup" element={<SignUp csrfToken={csrfToken} />} />
+
+        <Route path="/dashboard" element={<Dashboard  />} />
 
         {/* Redirect to SignIn if no other route matches */}
         <Route path="*" element={<Navigate to="/" />} />

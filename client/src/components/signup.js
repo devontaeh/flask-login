@@ -44,7 +44,7 @@ export default function SignUp({ csrfToken }) {
     const firstName = data.get("firstName");
     const lastName = data.get("lastName");
     const username = data.get("username");
-    console.log({firstName, lastName, email,username,password})
+    console.log({ firstName, lastName, email, username, password });
 
     fetch("/signup", {
       method: "POST",
@@ -56,7 +56,7 @@ export default function SignUp({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         if (data.success) {
           console.log(data.message);
           // Redirect to login or dashboard

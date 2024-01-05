@@ -170,11 +170,12 @@ def login():
     if form.validate_on_submit():
         
         user_data =   users.find_one({'username':form.username.data})
+        
         if user_data and bcrypt.check_password_hash(user_data['password'], form.password.data):
             
             user_obj = User(
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'],
+                firstName=user_data['first_name'],
+                lastName=user_data['last_name'],
                 email=user_data['email'],
                 username=user_data['username'],
                 password=user_data['password'],

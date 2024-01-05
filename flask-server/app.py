@@ -4,6 +4,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for, jso
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect, generate_csrf
+from flask_cors import CORS
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Email
 from flask_bcrypt import Bcrypt
@@ -22,7 +23,7 @@ mongo_uri = os.getenv('MONGO_URI')
 # Initialize Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key # set secret key for CSRF protection
-
+CORS(app)
 csrf =CSRFProtect(app)
 
 # Initialize Bcrypt for password hashing
@@ -181,7 +182,7 @@ def login():
             )
             login_user(user_obj)
             print('login success')
-            return jsonify({'success': True, 'message': 'Signup successful'}), 200
+            return jsonify({'success': True, 'message': 'Login successful'}), 200
         else:
             return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
 
@@ -206,24 +207,28 @@ def logout():
 # Registration page
 @app.route('/signup', methods = ['GET', 'POST'])
 def signup():
-    print("Recieved data: ", request.json)
-    form = RegisterForm()
-    print('form valid: ', form.validate_on_submit())
-    
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(
-            firstName=form.firstName.data,
-            lastName=form.lastName.data,
-            email=form.email.data,
-            username=form.username.data,
-            password=hashed_password
-            )
-        new_user.save()
-        return jsonify({'success': True, 'message': 'Signup successful'}), 200
-    
-
-    # If it's a GET request or form not validated
+    if request.method == 'POST':
+        print("Recieved data: ", request.json)
+        form = RegisterForm()
+        print('form valid: ', form.validate_on_submit())
+        
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            new_user = User(
+                firstName=form.firstName.data,
+                lastName=form.lastName.data,
+                email=form.email.data,
+                username=form.username.data,
+                password=hashed_password
+                )
+            new_user.save()
+            return jsonify({'success': True, 'message': 'Signup successful'}), 200
+        else:
+            print(form.errors)
+            # Return the error messages as a JSON response
+            return jsonify({'success': False,'message': form.errors}), 401
+            
+    # If non-POST request
     return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
 if __name__ == '__main__':

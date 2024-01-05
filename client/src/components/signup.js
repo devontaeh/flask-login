@@ -56,6 +56,7 @@ export default function SignUp({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         if (data.success) {
           console.log(data.message);
           // Redirect to login or dashboard

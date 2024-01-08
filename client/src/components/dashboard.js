@@ -1,22 +1,3 @@
-// import React from "react";
-// import Link from "@mui/material/Link";
-// import { useLocation } from "react-router-dom";
-
-// function Dashboard() {
-//   const {state} = useLocation()
-//   const {username} = state
-//   return (
-//     <div>
-//       <h1>Welcome {username} !</h1>
-//       <h2>
-//         <Link href='/signin'>Logout</Link>
-//       </h2>
-//     </div>
-//   );
-// }
-
-// export default Dashboard;
-
 import React from "react";
 import { Avatar, Button, Container, Typography, Box } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
@@ -29,7 +10,7 @@ export default function Dashboard({ csrfToken }) {
 
   const handleLogout = () => {
     fetch("/logout", {
-      method: "POST", // or GET, depending on how your Flask route is set up
+      method: "POST",
       credentials: "include", // necessary for cookies to be sent
       headers: {
         "Content-Type": "application/json",
@@ -53,10 +34,7 @@ export default function Dashboard({ csrfToken }) {
       });
   };
 
-  // const handleLogout = () => {
-  //   // Perform logout operations here
-  //   navigate('/signin'); // Redirect to the sign-in page after logout
-  // };
+
 
   return (
     <Container component="main" maxWidth="xs">

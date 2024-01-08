@@ -1,6 +1,9 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
-function Dashboard({ username }) {
+function Dashboard() {
+  const {state} = useLocation()
+  const {username} = state
   return (
     <div>
       <h1>Welcome {username} !</h1>

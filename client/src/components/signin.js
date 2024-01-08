@@ -57,7 +57,7 @@ export default function SignIn({ csrfToken }) {
         
         if (data.success) {
           console.log(data.message);
-          navigate('/dashboard')
+          navigate('/dashboard',{state: {username: username}})
         } else {
           console.log(data.message);
           // perform actions for failed login

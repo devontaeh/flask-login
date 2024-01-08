@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {useNavigate} from 'react-router-dom'
 
 function Copyright(props) {
   return (
@@ -36,6 +37,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn({ csrfToken }) {
+  const navigate = useNavigate()
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -55,7 +57,7 @@ export default function SignIn({ csrfToken }) {
         
         if (data.success) {
           console.log(data.message);
-          // Redirect to the dashboard
+          navigate('/dashboard')
         } else {
           console.log(data.message);
           // perform actions for failed login

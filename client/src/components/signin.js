@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -24,7 +24,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Devontae
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -37,14 +37,13 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn({ csrfToken }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
     fetch("/", {
-      
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,10 +53,9 @@ export default function SignIn({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        
         if (data.success) {
           console.log(data.message);
-          navigate('/dashboard',{state: {username: username}})
+          navigate("/dashboard", { state: { username: username } });
         } else {
           console.log(data.message);
           // perform actions for failed login

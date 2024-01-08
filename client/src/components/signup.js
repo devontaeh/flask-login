@@ -61,7 +61,7 @@ export default function SignUp({ csrfToken }) {
         console.log(data);
         if (data.success) {
           console.log(data.message);
-          navigate("/dashboard");
+          navigate("/dashboard", {state: {username: username}});
         } else {
           console.log(data.message);
           //Preform actions for failed login

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "@mui/material/Link";
 import { useLocation } from "react-router-dom";
 
 function Dashboard() {
@@ -7,6 +8,9 @@ function Dashboard() {
   return (
     <div>
       <h1>Welcome {username} !</h1>
+      <h2>
+        <Link href='/signin'>Logout</Link>
+      </h2>
     </div>
   );
 }

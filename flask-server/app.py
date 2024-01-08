@@ -52,8 +52,8 @@ def load_user(user_id):
     user_data = users.find_one({'_id':ObjectId(user_id)})
     if user_data:
         return User(
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
+            firstName=user_data['first_name'],
+            lastName=user_data['last_name'],
             email=user_data['email'],
             username=user_data['username'],
             password=user_data['password'],
@@ -150,11 +150,11 @@ class LoginForm(FlaskForm):
 # Routes for Flask application
 
 
-# Test route for react
-@app.route('/home_data')
-def home_data():
-    data = {"messages": ["hello1","hi","whats up"]}
-    return jsonify(data)
+# # Test route for react
+# @app.route('/home_data')
+# def home_data():
+#     data = {"messages": ["hello1","hi","whats up"]}
+#     return jsonify(data)
     
 @app.route('/get-csrf-token', methods=['GET'])
 def get_csrf_token():
@@ -190,19 +190,20 @@ def login():
     # If it's a GET request or form not validated
     return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
-# User dashboard
-@app.route('/dashboard', methods=['GET', 'POST'])
-@login_required 
-def dashboard():
+# # User dashboard
+# @app.route('/dashboard', methods=['GET', 'POST'])
+# @login_required 
+# def dashboard():
     
-    return render_template('dashboard.html')
-
+#     return render_template('dashboard.html')
 # Logout -> redirects to login page
+
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    
+    return jsonify({'success': True, 'message': 'Logged out successfully'}), 200
     
 
 # Registration page

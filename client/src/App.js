@@ -34,7 +34,7 @@ function App() {
         {/* Route for SignUp */}
         <Route path="/signup" element={<SignUp csrfToken={csrfToken} />} />
 
-        <Route path="/dashboard" element={<Dashboard  />} />
+        <Route path="/dashboard" element={<Dashboard csrfToken={csrfToken} />} />
 
         {/* Redirect to SignIn if no other route matches */}
         <Route path="*" element={<Navigate to="/" />} />

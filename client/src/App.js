@@ -20,7 +20,7 @@ function App() {
         return response.json(); //parse the the response
       })
       .then((data) => {
-        console.log(data);
+        // console.log('whats the data',data);
         setCsrfToken(data.csrfToken);
       })
       .catch((error) => console.log("Error fetching CSRF Token:", error));

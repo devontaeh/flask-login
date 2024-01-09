@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
+
 function Copyright(props) {
   return (
     <Typography
@@ -24,7 +25,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Devontae
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -58,7 +59,7 @@ export default function SignUp({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.success) {
           console.log(data.message);
           navigate("/dashboard", {state: {username: username}});

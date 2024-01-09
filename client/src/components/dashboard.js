@@ -19,7 +19,7 @@ export default function Dashboard({ csrfToken }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.success) {
           console.log(data.message);
           navigate("/");
@@ -51,7 +51,7 @@ export default function Dashboard({ csrfToken }) {
           sx={{ m: 1, bgcolor: deepOrange[500], width: 100, height: 100 }}
         >
           {/* Assuming the username's first letter as the Avatar text */}
-          {username ? username.charAt(0).toUpperCase() : ""}
+          { username.charAt(0).toUpperCase() }
         </Avatar>
 
         {/* Displaying Username */}

@@ -185,7 +185,7 @@ def login():
             print('login success')
             return jsonify({'success': True, 'message': 'Login successful'}), 200
         else:
-            return jsonify({'success': False, 'message': 'Invalid username or password'}), 401
+            return jsonify({'success': False, 'message': 'Invalid username or password. Please try again !'}), 401
 
     # If it's a GET request or form not validated
     return jsonify({'success': False, 'message': 'Invalid request'}), 400

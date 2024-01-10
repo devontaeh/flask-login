@@ -14,7 +14,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-
 function Copyright(props) {
   return (
     <Typography
@@ -39,6 +38,7 @@ const defaultTheme = createTheme();
 
 export default function SignUp({ csrfToken }) {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = React.useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -62,9 +62,18 @@ export default function SignUp({ csrfToken }) {
         // console.log(data);
         if (data.success) {
           console.log(data.message);
-          navigate("/dashboard", {state: {username: username}});
+          navigate("/dashboard", { state: { username: username } });
         } else {
           console.log(data.message);
+          if (data.message.hasOwnProperty('username') && data.message.hasOwnProperty('email')) {
+            setErrorMessage(
+              "The email and username entered are already in use. Please try again."
+            );
+          } else if (data.message.hasOwnProperty('username')) {
+            setErrorMessage(data.message.username[0]);
+          } else {
+            setErrorMessage(data.message.email[0]);
+          }
           //Preform actions for failed login
         }
       })
@@ -99,6 +108,11 @@ export default function SignUp({ csrfToken }) {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {errorMessage && (
+            <Typography variant="body2" color="error">
+              {errorMessage}
+            </Typography>
+          )}
           <Box
             component="form"
             noValidate

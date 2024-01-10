@@ -127,14 +127,14 @@ class RegisterForm(FlaskForm):
             {'username':username.data})
         if existing_user_username:
             raise ValidationError(
-                'This username already exists. Please choose a different one.')
+                'This username is already taken. Please enter a new one.')
             
     def validate_email(self, email):
         existing_user_email = users.find_one(
             {'email':email.data})
         if existing_user_email:
             raise ValidationError(
-                'This email is already in use. Please choose a different one.')
+                'This email address is already registered. Please use a different one.')
 
 # LoginForm with validators for user login
 class LoginForm(FlaskForm):

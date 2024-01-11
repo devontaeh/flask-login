@@ -1,8 +1,10 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, render_template, url_for, jsonify
+from flask import Flask, flash, redirect, render_template, request, url_for, jsonify
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect, generate_csrf
+from flask_cors import CORS
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Email
 from flask_bcrypt import Bcrypt
@@ -21,6 +23,8 @@ mongo_uri = os.getenv('MONGO_URI')
 # Initialize Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key # set secret key for CSRF protection
+CORS(app)
+csrf =CSRFProtect(app)
 
 # Initialize Bcrypt for password hashing
 bcrypt = Bcrypt(app)
@@ -48,8 +52,8 @@ def load_user(user_id):
     user_data = users.find_one({'_id':ObjectId(user_id)})
     if user_data:
         return User(
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
+            firstName=user_data['first_name'],
+            lastName=user_data['last_name'],
             email=user_data['email'],
             username=user_data['username'],
             password=user_data['password'],
@@ -59,10 +63,10 @@ def load_user(user_id):
 
 # User model for Flask-Login 
 class User:
-    def __init__(self,  first_name, last_name, email,username, password, _id=None):
+    def __init__(self,  firstName, lastName, email,username, password, _id=None):
         self._id = _id
-        self.first_name = first_name
-        self.last_name = last_name
+        self.firstName = firstName
+        self.lastName = lastName
         self.email = email
         self.username = username
         self.password = password
@@ -70,8 +74,8 @@ class User:
     # Save user to MongoDB
     def save(self):
         user_data = {
-            'first_name': self.first_name,
-            'last_name': self.last_name,
+            'first_name': self.firstName,
+            'last_name': self.lastName,
             'email': self.email,
             'username': self.username,
             'password': self.password
@@ -105,8 +109,8 @@ class User:
 
 # Registration form with WTForms validators
 class RegisterForm(FlaskForm):
-    first_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "First Name"})
-    last_name = StringField(validators=[InputRequired()], render_kw={"placeholder": "Last Name"})
+    firstName = StringField(validators=[InputRequired()], render_kw={"placeholder": "First Name"})
+    lastName = StringField(validators=[InputRequired()], render_kw={"placeholder": "Last Name"})
     email = StringField(validators=[InputRequired(), Email()], render_kw={"placeholder": "Email"})
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -123,14 +127,14 @@ class RegisterForm(FlaskForm):
             {'username':username.data})
         if existing_user_username:
             raise ValidationError(
-                'This username already exists. Please choose a different one.')
+                'This username is already taken. Please enter a new one.')
             
     def validate_email(self, email):
         existing_user_email = users.find_one(
             {'email':email.data})
         if existing_user_email:
             raise ValidationError(
-                'This email is already in use. Please choose a different one.')
+                'This email address is already registered. Please use a different one.')
 
 # LoginForm with validators for user login
 class LoginForm(FlaskForm):
@@ -143,81 +147,95 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
     
    
-
-
 # Routes for Flask application
-# Home
-@app.route('/')
-def home():
-    return render_template('home.html')
 
-# Login page
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
+
+# # Test route for react
+# @app.route('/home_data')
+# def home_data():
+#     data = {"messages": ["hello1","hi","whats up"]}
+#     return jsonify(data)
     
+@app.route('/get-csrf-token', methods=['GET'])
+def get_csrf_token():
+    token = generate_csrf()
+    
+    return jsonify({'csrfToken': token})
+
+# Login/home page
+@app.route('/', methods = ['GET', 'POST'])
+def login():
+    print("recieved data:", request.json)
     form = LoginForm()
     if form.validate_on_submit():
         
         user_data =   users.find_one({'username':form.username.data})
+        
         if user_data and bcrypt.check_password_hash(user_data['password'], form.password.data):
             
             user_obj = User(
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'],
+                firstName=user_data['first_name'],
+                lastName=user_data['last_name'],
                 email=user_data['email'],
                 username=user_data['username'],
                 password=user_data['password'],
                 _id=user_data['_id']
             )
             login_user(user_obj)
-            return redirect(url_for('dashboard'))
+            print('login success')
+            return jsonify({'success': True, 'message': 'Login successful'}), 200
         else:
-        
-            flash('Invalid username or password', 'error')
-    return render_template('login.html', form = form)
+            return jsonify({'success': False, 'message': 'Invalid username or password. Please try again !'}), 401
 
-# User dashboard
-@app.route('/dashboard', methods=['GET', 'POST'])
-@login_required 
-def dashboard():
+    # If it's a GET request or form not validated
+    return jsonify({'success': False, 'message': 'Invalid request'}), 400
+
+# # User dashboard
+# @app.route('/dashboard', methods=['GET', 'POST'])
+# @login_required 
+# def dashboard():
     
-    return render_template('dashboard.html')
-
+#     return render_template('dashboard.html')
 # Logout -> redirects to login page
+
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    
+    return jsonify({'success': True, 'message': 'Logged out successfully'}), 200
     
 
 # Registration page
-@app.route('/register', methods = ['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data,
-            username=form.username.data,
-            password=hashed_password
-            )
-        new_user.save()
-        return redirect(url_for('login'))
-    else:
-        if form.errors:
-            print("Form errors:")
-            for field, errors in form.errors.items():
-                for error in errors:
-                    print(f"Error in the {field} field - {error}")
-    return render_template('register.html', form = form)
-    
+@app.route('/signup', methods = ['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        print("Recieved data: ", request.json)
+        form = RegisterForm()
+        print('form valid: ', form.validate_on_submit())
+        
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            new_user = User(
+                firstName=form.firstName.data,
+                lastName=form.lastName.data,
+                email=form.email.data,
+                username=form.username.data,
+                password=hashed_password
+                )
+            new_user.save()
+            return jsonify({'success': True, 'message': 'Signup successful'}), 200
+        else:
+            print(form.errors)
+            # Return the error messages as a JSON response
+            return jsonify({'success': False,'message': form.errors}), 401
+            
+    # If non-POST request
+    return jsonify({'success': False, 'message': 'Invalid request'}), 400
 
 if __name__ == '__main__':
     # for deployment
     # to make it work for both production and development
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=True)

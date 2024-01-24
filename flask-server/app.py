@@ -15,7 +15,8 @@ from bson import ObjectId
 # Load environment variales for secret keys and database URI
 load_dotenv()
 secret_key = os.getenv('SECRET_KEY')
-mongo_uri = os.getenv('MONGO_URI')
+# mongo_uri = os.getenv('MONGO_URI')
+mongo_uri = "mongodb+srv://dhudso3:x1pd32hRYY1LH0eu@loginapp.tjrlnvl.mongodb.net/?retryWrites=true&w=majority"
 
 
 # basedir = os.path.abspath(os.path.dirname(__file__))
@@ -31,6 +32,7 @@ bcrypt = Bcrypt(app)
 
 # set up MongoDB connection
 client = MongoClient(mongo_uri, tlsCAFile=certifi.where())
+# client = MongoClient(mongo_uri)
 db = client['loginApp']
 users = db.users
 

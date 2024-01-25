@@ -17,7 +17,13 @@ export default function Dashboard({ csrfToken }) {
         "X-CSRFToken": csrfToken,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok");
+      })
+
       .then((data) => {
         // console.log(data);
         if (data.success) {
@@ -34,8 +40,6 @@ export default function Dashboard({ csrfToken }) {
       });
   };
 
-
-
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -51,7 +55,7 @@ export default function Dashboard({ csrfToken }) {
           sx={{ m: 1, bgcolor: deepOrange[500], width: 100, height: 100 }}
         >
           {/* Assuming the username's first letter as the Avatar text */}
-          { username.charAt(0).toUpperCase() }
+          {username.charAt(0).toUpperCase()}
         </Avatar>
 
         {/* Displaying Username */}

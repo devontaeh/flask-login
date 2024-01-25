@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, render_template, request, url_for, jsonify
+from flask import Flask, flash, redirect, render_template, request, url_for, jsonify, session
 from flask_login import UserMixin, login_user,LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect, generate_csrf
@@ -51,7 +51,9 @@ login_manager.login_view = 'login'
 # User loader callback for Flask-Login to load user from session
 @login_manager.user_loader
 def load_user(user_id):
+    print('user id' , user_id)
     user_data = users.find_one({'_id':ObjectId(user_id)})
+    # print('user id' , {'_id':ObjectId(user_id)})
     if user_data:
         return User(
             firstName=user_data['first_name'],
@@ -83,7 +85,8 @@ class User:
             'password': self.password
             
         }
-        users.insert_one(user_data)
+        result =  users.insert_one(user_data)
+        self._id = result.inserted_id
      
     # Required methods for Flask-Login user model
     @staticmethod
@@ -200,7 +203,7 @@ def login():
 #     return render_template('dashboard.html')
 # Logout -> redirects to login page
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
@@ -226,6 +229,10 @@ def signup():
                 password=hashed_password
                 )
             new_user.save()
+        
+            login_user(new_user)
+            
+           
             return jsonify({'success': True, 'message': 'Signup successful'}), 200
         else:
             print(form.errors)

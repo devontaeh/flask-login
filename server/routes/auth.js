@@ -6,7 +6,7 @@ router.get('/login', (req, res)=>{
     res.send('Login page')
 })
 
-router.get('/signup', (req,res)=>{
+router.get('/register', (req,res)=>{
     res.send("Signup page")
 })
 

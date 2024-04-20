@@ -1,4 +1,4 @@
-const {getDb} = require("../db/conn");
+const { getDb } = require("../db/conn");
 const bcrypt = require("bcrypt");
 
 const handleNewUser = async (req, res) => {
@@ -10,16 +10,16 @@ const handleNewUser = async (req, res) => {
   }
 
   try {
-    const db = getDb()
-    const users = db.collection('users')
-    
+    const db = getDb();
+    const users = db.collection("users");
+
     // check for duplicate username/email in the db
-    const duplicate = await users.findOne({$or: [{ username }, {email}]});
-    console.log(duplicate)    
+    const duplicate = await users.findOne({ $or: [{ username }, { email }] });
+    console.log(duplicate);
     if (duplicate) {
       return res
-      .sendStatus(409)
-      .json({ message: "Username or email already exists." });
+        .status(409)
+        .json({ message: "Username or email already exists." });
     }
 
     // pwd encryption
@@ -36,7 +36,6 @@ const handleNewUser = async (req, res) => {
 
     console.log(result);
     res.status(201).json({ success: `New user ${username} created!` });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

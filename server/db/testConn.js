@@ -7,7 +7,7 @@ async function testDb() {
     await connectToServer();
     console.log("connected");
     const db = getDb();
-    const docs = await db.collection("users").find({}).toArray();
+    const docs = await db.collection("users").findOne({});
     console.log("docs => ", docs);
   } catch (err) {
     console.log("error:", err);

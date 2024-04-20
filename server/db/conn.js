@@ -1,10 +1,6 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config({ path: "../.env" });
 
-
-
-
-
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(process.env.MONGO_URI, {
   serverApi: {
@@ -16,16 +12,15 @@ const client = new MongoClient(process.env.MONGO_URI, {
 
 let dbConnection;
 
-
 module.exports = {
-  connectToServer: async function () {
+  connectToServer: async () => {
     try {
       await client.connect();
       dbConnection = client.db(process.env.DB_NAME);
       console.log("Success");
     } catch (err) {
-      console.log("failed");
-      throw err
+      console.log("failed", err);
+      throw err;
     }
   },
 
@@ -33,11 +28,10 @@ module.exports = {
     return dbConnection;
   },
 
-  closeConnection: function(){
-    if (client.isConnected()){
-        client.close()
-        console.log("MongoDB connection closed")
+  closeConnection: function () {
+    if (client.isConnected()) {
+      client.close();
+      console.log("MongoDB connection closed");
     }
-  }
+  },
 };
-

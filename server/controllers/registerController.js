@@ -16,6 +16,7 @@ const handleNewUser = async (req, res) => {
     // check for duplicate username/email in the db
     const duplicate = await users.findOne({ $or: [{ username }, { email }] });
     console.log(duplicate);
+
     if (duplicate) {
       return res
         .status(409)

@@ -1,11 +1,8 @@
-const express = require('express');
-const app = express()
-
-var router = express.Router();
+const express = require("express");
+const {handleUserLogin} = require("../controllers/loginController");
+const router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.post("/", handleUserLogin);
 
 module.exports = router;

@@ -3,7 +3,9 @@ const express = require("express");
 const authRoutes = require("./routes/auth");
 const homeRoutes = require("./routes/home");
 const registerRoute = require("./routes/register");
+const loginRoute = require("./routes/login");
 const { connectToServer } = require("./db/conn");
+const bodyParser = require("body-parser");
 const app = express();
 
 // connect to MongoDB
@@ -22,8 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", homeRoutes);
-app.use("/auth", authRoutes);
+
 app.use("/register", registerRoute);
+app.use("/login", loginRoute);
 
 // Error handling
 app.use((err, req, res, next) => {

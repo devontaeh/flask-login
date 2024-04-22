@@ -66,19 +66,8 @@ export default function SignUp({ csrfToken }) {
           navigate("/dashboard", { state: { username: username } });
         } else {
           console.log(data.message);
-          setErrorMessage(data.message)
-          if (
-            data.message.hasOwnProperty("username") &&
-            data.message.hasOwnProperty("email")
-          ) {
-            setErrorMessage(
-              "The email and username entered are already in use. Please try again."
-            );
-          } else if (data.message.hasOwnProperty("username")) {
-            setErrorMessage(data.message.username[0]);
-          } else {
-            setErrorMessage(data.message.email[0]);
-          }
+          setErrorMessage(data.message);
+
           //Preform actions for failed login
         }
       })

@@ -20,7 +20,7 @@ const handleNewUser = async (req, res) => {
     if (duplicate) {
       return res
         .status(409)
-        .json({ message: "Username or email already exists." });
+        .json({ success: false, message: "Username or email already exists." });
     }
 
     // pwd encryption
@@ -36,7 +36,9 @@ const handleNewUser = async (req, res) => {
     });
 
     console.log(result);
-    res.status(201).json({ success: `New user ${username} created!` });
+    res
+      .status(201)
+      .json({ success: true, message: `New user ${username} created!` });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

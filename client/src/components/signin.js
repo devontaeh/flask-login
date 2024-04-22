@@ -14,7 +14,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-
 function Copyright(props) {
   return (
     <Typography
@@ -39,13 +38,14 @@ const defaultTheme = createTheme();
 
 export default function SignIn({ csrfToken }) {
   const navigate = useNavigate();
-  const [errorMessage,setErrorMessage] = React.useState('')
+  const [errorMessage, setErrorMessage] = React.useState("");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
-    fetch("/", {
+    fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,13 +57,12 @@ export default function SignIn({ csrfToken }) {
       .then((data) => {
         if (data.success) {
           console.log(data.message);
-          navigate("/dashboard", { state: { username: username } });
+          navigate("/dashboard", { state: { username } });
         } else {
           console.log(data.message);
-          
-          setErrorMessage(data.message)
-            
-        
+
+          setErrorMessage(data.message);
+
           // perform actions for failed login
         }
       })

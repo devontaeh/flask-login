@@ -1,11 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-const authRoutes = require("./routes/auth");
 const homeRoutes = require("./routes/home");
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const { connectToServer } = require("./db/conn");
-const bodyParser = require("body-parser");
+const cors = require('cors')
 const app = express();
 
 // connect to MongoDB
@@ -20,6 +19,7 @@ const connectDb = async () => {
 
 connectDb();
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

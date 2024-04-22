@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+// import { set } from "mongoose";
 
 function Copyright(props) {
   return (
@@ -49,7 +50,7 @@ export default function SignUp({ csrfToken }) {
     const username = data.get("username");
     console.log({ firstName, lastName, email, username, password });
 
-    fetch("/signup", {
+    fetch("/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,11 +66,15 @@ export default function SignUp({ csrfToken }) {
           navigate("/dashboard", { state: { username: username } });
         } else {
           console.log(data.message);
-          if (data.message.hasOwnProperty('username') && data.message.hasOwnProperty('email')) {
+          setErrorMessage(data.message)
+          if (
+            data.message.hasOwnProperty("username") &&
+            data.message.hasOwnProperty("email")
+          ) {
             setErrorMessage(
               "The email and username entered are already in use. Please try again."
             );
-          } else if (data.message.hasOwnProperty('username')) {
+          } else if (data.message.hasOwnProperty("username")) {
             setErrorMessage(data.message.username[0]);
           } else {
             setErrorMessage(data.message.email[0]);

@@ -25,7 +25,7 @@ const handleUserLogin = async (req, res) => {
 
       res.status(401).json({ success: true, message: `User ${username} read!` });
     } else {
-      res.status(409).json({success: false,  message: "Invalid username or password" });
+      res.status(409).json({success: false,  message: "Invalid username and/or password" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });

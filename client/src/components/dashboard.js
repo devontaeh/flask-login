@@ -9,35 +9,47 @@ export default function Dashboard({ csrfToken }) {
   const { username } = state;
 
   const handleLogout = () => {
-    fetch("/logout", {
-      method: "POST",
-      credentials: "include", // necessary for cookies to be sent
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok");
-      })
+    try{
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
+      document.cookie = 'sessionToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
 
-      .then((data) => {
-        // console.log(data);
-        if (data.success) {
-          console.log(data.message);
-          navigate("/");
-        } else {
-          console.log(data.message);
-          //Preform actions for failed login
-        }
-      })
-      .catch((error) => {
-        console.error("Logout failed:", error);
-        // Handle network errors or other unexpected issues
-      });
+      navigate('/');
+      console.log("Logout successful");
+
+
+    }catch(error){
+      console.log("Logout failed: ", error)
+    }
+    // fetch("/logout", {
+    //   method: "POST",
+    //   credentials: "include", // necessary for cookies to be sent
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "X-CSRFToken": csrfToken,
+    //   },
+    // })
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     }
+    //     throw new Error("Network response was not ok");
+    //   })
+
+    //   .then((data) => {
+    //     // console.log(data);
+    //     if (data.success) {
+    //       console.log(data.message);
+    //       navigate("/");
+    //     } else {
+    //       console.log(data.message);
+    //       //Preform actions for failed login
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Logout failed:", error);
+    //     // Handle network errors or other unexpected issues
+    //   });
   };
 
   return (

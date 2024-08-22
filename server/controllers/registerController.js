@@ -2,12 +2,20 @@ const { getDb } = require("../db/conn");
 const bcrypt = require("bcrypt");
 
 const handleNewUser = async (req, res) => {
-  const { firstname, lastname, username, email, password } = req.body;
+  const { firstName, lastName, username, email, password } = req.body;
   if (!username || !password) {
     return res
       .status(400)
       .json({ message: "Username and password are required" });
   }
+
+  console.log("request data: ", {
+    first_name: firstName,
+    last_name: lastName,
+    username,
+    email,
+    password,
+  });
 
   try {
     const db = getDb();
@@ -28,8 +36,8 @@ const handleNewUser = async (req, res) => {
 
     // create and store new user
     const result = await users.insertOne({
-      firstname,
-      lastname,
+      first_name: firstName,
+      last_name: lastName,
       username,
       email,
       password: hashedPwd,

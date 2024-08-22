@@ -39,9 +39,12 @@ const handleUserLogin = async (req, res) => {
         }
       );
 
-      res
-        .status(401)
-        .json({ success: true, message: `User ${username} read!` });
+      res.status(401).json({
+        success: true,
+        message: `User ${username} authenticated succesfully!`,
+        accessToken,
+        refreshToken,
+      });
     } else {
       res
         .status(409)
